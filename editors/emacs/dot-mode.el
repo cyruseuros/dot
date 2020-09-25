@@ -5,7 +5,8 @@
   "Intentionally strict symbol definition for `dot-mode'")
 
 (defvar dot-mode-font-lock-keywords
-  `(,(concat "-" dot-mode-symbol-regexp) font-lock-builtin-face)
+  `((,(concat "-" dot-mode-symbol-regexp) . font-lock-keyword-face)
+    ("[.:,/]" . font-lock-builtin-face))
   "`dot-mode' keywords to be used in `font-lock-defaults'.")
 
 (defvar dot-mode-syntax-table
