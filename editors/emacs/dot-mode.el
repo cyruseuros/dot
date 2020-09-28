@@ -35,9 +35,6 @@ To be used after `dot-mode-comment-char' or a sufficient amount
                      dot-mode-comment-regex)
              bound t)))))
 
-# multi-line
-comment
-
 (defvar dot-mode-font-lock-keywords
   `((,(concat " -" dot-mode-symbol-regexp) . font-lock-keyword-face)
     ("[.:,/]" . font-lock-builtin-face)
