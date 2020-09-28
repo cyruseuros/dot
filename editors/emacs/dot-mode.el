@@ -7,7 +7,7 @@
 (defvar dot-mode-comment-char ?#
   "The `dot-moder' comment character")
 
-(defvar dot-mode-comment-regex " \W+$"
+(defvar dot-mode-comment-regex " .*$"
   "Regex to match comments.
 To be used after `dot-mode-comment-char' or a sufficient amount
   of leading whitespace until the end of the line.")
@@ -20,19 +20,23 @@ To be used after `dot-mode-comment-char' or a sufficient amount
 
 (defun dot-mode-comment-matcher (bound)
   "Called as `font-lock-keywords' matcher."
-  (when (= ?# (char-after))
-    (setq dot-mode-in-comment t
-          dot-mode-comment-column (current-column))
-    (re-search-forward
-     (concat "^.*" (char-to-string dot-mode-comment-char)
-             dot-mode-comment-regex)
-     bound t))
-  (when dot-mode-in-comment
-    (setq dot-mode-in-comment
-          (re-search-forward
-           (concat "^" (make-string dot-mode-comment-column ?\s)
-                   dot-mode-comment-regex)
-           bound t))))
+  (if (= ?# (char-after))
+      (progn
+        (setq dot-mode-in-comment t
+              dot-mode-comment-column (current-column))
+        (re-search-forward
+         (concat "^.*" (char-to-string dot-mode-comment-char)
+                 dot-mode-comment-regex)
+         bound t))
+    (when dot-mode-in-comment
+      (setq dot-mode-in-comment
+            (re-search-forward
+             (concat "^" (make-string dot-mode-comment-column ?\s)
+                     dot-mode-comment-regex)
+             bound t)))))
+
+# multi-line
+comment
 
 (defvar dot-mode-font-lock-keywords
   `((,(concat " -" dot-mode-symbol-regexp) . font-lock-keyword-face)
