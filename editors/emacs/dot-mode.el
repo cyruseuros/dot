@@ -7,6 +7,11 @@
 (defvar dot-mode-comment-char ?#
   "The `dot-moder' comment character")
 
+(defvar dot-mode-comment-regex " \W+$"
+  "Regex to match comments.
+To be used after `dot-mode-comment-char' or a sufficient amount
+  of leading whitespace until the end of the line.")
+
 (defvar dot-mode-in-comment nil
   "Whether we're currently fontifying a comment.")
 
@@ -19,17 +24,20 @@
     (setq dot-mode-in-comment t
           dot-mode-comment-column (current-column))
     (re-search-forward
-     (concat ".*" (char-to-string dot-mode-comment-char) ".+$")
+     (concat "^.*" (char-to-string dot-mode-comment-char)
+             dot-mode-comment-regex)
      bound t))
   (when dot-mode-in-comment
     (setq dot-mode-in-comment
           (re-search-forward
-           (concat (make-string (1+ dot-mode-comment-column) ?\s) ".+$")
+           (concat "^" (make-string dot-mode-comment-column ?\s)
+                   dot-mode-comment-regex)
            bound t))))
 
 (defvar dot-mode-font-lock-keywords
-  `((,(concat "-" dot-mode-symbol-regexp) . font-lock-keyword-face)
-    ("[.:,/]" . font-lock-builtin-face))
+  `((,(concat " -" dot-mode-symbol-regexp) . font-lock-keyword-face)
+    ("[.:,/]" . font-lock-builtin-face)
+    (dot-mode-comment-matcher 0 font-lock-comment-face))
   "`dot-mode' keywords to be used in `font-lock-defaults'.")
 
 (defvar dot-mode-syntax-table
